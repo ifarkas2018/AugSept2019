@@ -401,11 +401,13 @@ public class MainController1p1 {
         }
 	}
     
+    /*
     // if the requested URL is localhost:8080/add_schedule, method is GET do 
     @RequestMapping(value = { "add_schedule" }, method = RequestMethod.GET)
     public String add_schedule(Model model) {
         return "add_schedule"; // return the add_schedule.jsp
     }
+    */
     
     // if the requested URL is localhost:8080/show_sched, method is GET 
     // when the user clicks on the navigation bar on Schedule, Show Schedule
@@ -455,6 +457,12 @@ public class MainController1p1 {
     	empID = employee_id; // setting the variable empID to the value entered on the form
     	fName = first_name; // setting the variable fName to the value entered on the form
     	lName = last_name; // setting the variable lName to the value entered on the form
+    	
+    	// if fName, lName contains ' add one more next to it ( otherwise an error will occur when running the SQL query )  
+    	if (fName != null && !fName.equals(""))
+    		fName = TimeMngLibrary.addApostrophe(fName);
+    	if (lName != null && !lName.equals(""))
+    		lName = TimeMngLibrary.addApostrophe(lName);
     
     	if ((empID==null) && (fName==null) && (lName==null)) { // if it is a regular user ( who is doing update and not show of the schedule, retrieve the name 
 	    	// add to the SQL query the WHERE clause - where emp_id = loginID of the user logged in 
@@ -476,6 +484,9 @@ public class MainController1p1 {
     		if (lst != null && !lst.isEmpty()) { // retrieve the name
     			fName = lst.get(0).getFirstName(); // retrieving the first name of the logged in user
     			lName = lst.get(0).getLastName(); // retrieving the last name of the logged in user
+    			// first_name, last_name are used for showing the message on the results.jsp if there is NO schedule for that employee
+    			first_name = fName;
+    			last_name = lName;
     			// @@@@@@@@@@@@@@@ check here lstEmp is null 30/07/2019 after splitting DAO now I have lst and lstEmp
     			if (name_entered) // if the user is logged as an admin and he entered the first and last name then read the employee ID
     				empID = lstEmp.get(0).getEmployeeID(); // retrieving the employee ID
@@ -491,7 +502,16 @@ public class MainController1p1 {
 			// there are no tasks returned for the certain employee on the certain day
 			if (list == null || list.isEmpty()) {
 				model.addAttribute("page_title", "Schedule");
-				model.addAttribute("message_shown", "The schedule for " + fName + " " + lName + " on " + enter_date + " doesn't exist!" );
+				
+				if (empID != null )
+					if (!empID.equals(""))
+						model.addAttribute("message_shown", "The schedule for employee with employee ID " + empID + " named "+ first_name + " " + last_name + " on " + enter_date + " doesn't exist!" );
+					else
+						model.addAttribute("message_shown", "The schedule for employee named "+ first_name + " " + last_name + " on " + enter_date + " doesn't exist!" );
+				else
+					model.addAttribute("message_shown", "The schedule for employee named "+ first_name + " " + last_name + " on " + enter_date + " doesn't exist!" );
+				
+				
 				// the message should be in red ( adding it to the model )
 				model.addAttribute("is_red", "true");
 				// set here some model attributes if needed
@@ -505,13 +525,15 @@ public class MainController1p1 {
 				model.addAttribute("enter_l_name", lName );
 				// add the date ( of the schedule ) to the model
 				model.addAttribute("enter_date", enter_date ); 
+				
+				//model.addAttribute("sess_update", "true");
 				// show_sched_results is shown for Show Schedule and Update Schedule
 				return "show_sched_results"; // show the show_sched_results.jsp
 			}
 		} else { // in the database there is no first name and last name for the user logged in 
 			// TEST THIS !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         	model.addAttribute("page_title", "Schedule"); // adding the page_title variable to the model
-        	model.addAttribute("message_shown", "For your login there is no first and second name!"); // adding the message to the model
+        	model.addAttribute("message_shown", "For your login the first and the second name is not entered!"); // adding the message to the model
         	model.addAttribute("is_red", "true"); // the message should be in red ( adding it to the model )
         	model.addAttribute("logged_in", "true"); // setting the attribute logged_in to true - the user is logged in
         	return "result";
@@ -565,7 +587,7 @@ public class MainController1p1 {
     	return "result";
     }
     
-    
+    /*
     @RequestMapping(value = { "/test1" }, method = RequestMethod.GET)
     public String test(Model model) {
     	return "test1";
@@ -575,6 +597,7 @@ public class MainController1p1 {
     public String accounts1(Model model) {
     	return "accounts1";
     }
+    */
     
     // if the requested URL is localhost:8080/task_list, method is GET do 
     @RequestMapping(value = { "task_list" }, method = RequestMethod.GET)

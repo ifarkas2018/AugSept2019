@@ -28,6 +28,7 @@
         table.rows[i].onclick = function()
         {
             document.getElementById("taskId").value = this.cells[0].innerHTML; // put the value for the task id from the table ( of the sel. row ) into the input box 
+            document.getElementById("text_taskid").innerHTML = "Choosen Task Id: " + "<b>" + this.cells[0].innerHTML + "</b>";
             row_selected = true; // the user selected the row from the tatble
         };
     }
@@ -84,8 +85,9 @@
 								<!-- !!!!!!!!!!!!!!!!!!!11 HIDE THE next line -->
 								Id:<input type="text" name="taskId" id="taskId"><br><br>
 								<br/>
-								Please click on the table fist to select the task!
+								Please click on the table first to select the task!
 								<br/>
+								<div id="text_taskid"></div>
 								<!-- creating the table with the tasks -->
 								<table class="w3-table w3-bordered w3-centered" id="table">
 									<!-- creating the table row with the headings -->
@@ -172,7 +174,8 @@
 		        {
 		    		row_selected = true; // the user clicked on the row of the table before clicking on the button
 		            document.getElementById("taskId").value = this.cells[0].innerHTML; // put the value for the task id from the table ( of the sel. row ) in the the input box         
-				};
+		            document.getElementById("text_taskid").innerHTML = "Chosen Task Id: " + "<b>" + this.cells[0].innerHTML + "</b>";
+		        };
 			}
 	
 	</script>

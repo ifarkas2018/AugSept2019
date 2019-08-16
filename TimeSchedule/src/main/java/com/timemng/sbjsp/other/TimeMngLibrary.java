@@ -35,7 +35,7 @@ public static String addApostrophe(String str){
         int stringLen = str.length();
          
         strCharacter = "''";
-          
+        
         pos = str.indexOf("'", 0); // finds the position of the ' starting from the position = 0
         
         

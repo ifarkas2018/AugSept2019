@@ -74,29 +74,26 @@
     					<% 
     					} else { // if Show Schedule or Update Schedule
     					%>
-    						<form action="/sched_table" method="post"> <!-- shows the URL : localhost:8080/sched_table -->
+    						<form action="/sched_table" name="show_sched" id="show_sched" method="post"> <!-- shows the URL : localhost:8080/sched_table -->
 		                <%
     					}
 		                // if the user is logged in as admin, or as an ordinary user who is not doing the update ( but show of the schedule )
 		                if ((is_adm) || (is_update).equals("false")){ %> 
 			            	<div class="w3-section">
 				                <label>Employee ID</label>
-				                <!--  ??????????????????????????????  -->
-				                <!--  when removing REQUIRED go to MainController, show_schedule, and in method show_schedule remove required=true 
-				                      for the employee_id -->
-				                <input class="w3-input w3-border" type="text" name="employee_id"> <!-- input field for entering the employee_id -->
+				                <input class="w3-input w3-border" type="text" name="employee_id" id="employee_id" maxlength="6" onchange='isNum("show_sched", "employee_id", "is_empid", "empid_message");'> <!-- input field for entering the employee_id -->
+			                	<span id="empid_message" class="red_text"></span>
 			                </div>
 		                  	
 			                <div class="w3-section">
 			                    <label>First Name</label>  
-			                    <input class="w3-input w3-border" type="text" name="first_name" required=true> <!-- input field for entering the first_name -->
+			                    <input class="w3-input w3-border" type="text" name="first_name" id="first_name" maxlength="30" onchange="valLetters(document.show_sched.first_name, fname_message, 'true', 'true');" required=true> <!-- input field for entering the first_name -->
+			               		<span id="fname_message" class="red_text">* Required Field</span>
 			                </div>
 			                <div class="w3-section">
 			                    <label>Last Name</label>
-			                    <!--  ??????????????????????????????  -->
-			                    <!--  when removing REQUIRED go to MainController, show_schedule, and in method show_schedule remove required=true
-			                    	  for the last-name -->
-			                    <input class="w3-input w3-border" type="text" name="last_name" required=true> <!-- input field for entering the last_name -->
+			                    <input class="w3-input w3-border" type="text" name="last_name" id="last_name" maxlength="30" onchange="valLetters(document.show_sched.last_name, lname_message, 'true', 'false');" required=true> <!-- input field for entering the last_name -->
+			                	<span id="lname_message" class="red_text">* Required Field</span>
 			                </div> 
 		                <% } %>  
 		                  	
@@ -105,16 +102,14 @@
 		                %>
 			                    <div class="w3-section">
 			                    	<label>Date ( format dd/mm/yyyy ) </label>
-			                    	<!--  ??????????????????????????????  -->
-			                    	<!--  when removing REQUIRED go to MainController, show_schedule, and in method show_schedule remove required=true 
-			                    		  for the date -->
-			                    	<input class="w3-input w3-border" type="text" name="date" required=true>
+			                    	<input class="w3-input w3-border" type="text" name="date" id="date" maxlength="10" onchange='isDate("date", "date_message");' required=true>
+			                    	<span id="date_message" class="red_text">* Required Field</span>
 			                  	</div>
 		                <%
 		                  	}
 		                %>  
 		                <!-- w3-camo-grey is a CSS rule in the colors.css -->
-		                <button class="w3-btn w3-camo-grey">Submit</button> 
+		                <button class="w3-btn w3-camo-grey" onclick="return checkForm();">Submit</button> 
 		                </form>
 	              	</div>
 	            </div>

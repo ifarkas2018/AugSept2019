@@ -8,6 +8,115 @@
 <head>
 	<!-- the link to the external style sheet -->	  
 	<%@ include file="header.jsp"%>
+	<script>
+		
+		FNAME_VAL = 'true'; // does the first name input field contain only letters ( and spaces and apostrophes )
+		LNAME_VAL = 'true'; // does the last name input field contain only letters ( and spaces and apostrophes )
+		// PASSW_EQUAL = 'true'; // do the passwords in 2 input fields match 
+		EMPID_VAL = 'true'; // is the entered Employee ID a number 
+		DATE_VAL = 'true'; // has the entered date a date format 
+		
+		// isNumber: shows a message ( in the msg_field ) if the user entered a value that is a non numeric value ( in the input field named input_field )
+		// formid: id of the form
+		// num_type - is the input in the field an Employee ID @@@@@@@@@@@@@@@@@@@@@@@ change this
+		function isNum(formid, input_field, num_type, msg_field) {
+		    var number; 
+		    
+		    // the number in the input field
+		    number = document.getElementById(input_field).value;
+		    
+		    // if the value entered is not a nuumber 
+		    if ( isNaN(number)) {
+		        document.getElementById(msg_field).innerHTML = "* Can Contain Only Digits"; // show the message
+		        if (num_type == 'is_empid') {
+		            EMPID_VAL = 'false';
+		        }
+		    } else {
+		        if (num_type == 'is_empid') {
+		            EMPID_VAL  = 'true';
+		        }
+		        document.getElementById(msg_field).innerHTML = ""; // show the message 
+		    }
+		}
+		
+		// isDate: shows a message ( in the msg_field ) if the user entered a date ( in the input field named input_field )
+		function isDate(input_field, msg_field) {
+			var date;
+			
+			// the date in the input field
+			date = document.getElementById(input_field).value;
+			
+			if (date.indexOf("//") < 0) {
+				var arr = date.split("/"); // split the date using the character /
+	
+				if ((isNaN(arr[0])) || (isNaN(arr[1])) || (isNaN(arr[2]))) { // if the day, month or year is not a number
+					DATE_VAL = 'false';
+					document.getElementById(msg_field).innerHTML = "* Can Contain Only Digits"; // show the message
+				} else {
+					if (arr[0]>31 || arr[1]>12) {
+						DATE_VAL = 'false';
+						document.getElementById(msg_field).innerHTML = "* The Day Has To Be < 31 And The Month Has To Be <12";
+					} else {
+						DATE_VAL = 'true';
+						document.getElementById(msg_field).innerHTML = "* Required Field";
+					}
+				}
+			} else {
+				DATE_VAL = 'false';
+				document.getElementById(msg_field).innerHTML = "* Can Contain Only Digits"; // show the message
+			}
+		}
+		
+		// setNAME_VAL: if is_fname is 'true' sets the FNAME_VAL to val, otherwise sets the LNAME_VAL to val 
+		function setNAME_VAL(is_fname, val) {
+			if (is_fname === 'true') {
+		    	FNAME_VAL = val;
+		    } else {
+		    	LNAME_VAL = val;
+		    }
+		}
+		
+		// valLetters: checks whether in the control input_field there are only letters ( and spaces and apostrophes ). If not in the message_span the message is shown.
+		// required - if the input field was required to be filled in before showing the message, when the user corrects the mistake, below
+		// is shown again that the input field is required ( to be filled in )
+		function valLetters( input_field, message_span,required, is_fname) { 
+		    var regex = /^[a-zA-Z\x27\x20]+$/;
+		    
+		    if (!input_field.value == '') {
+		        if ( !regex.test(input_field.value)) { // if the user entered some characters which are not letters ( in the input_field )
+		            message_span.innerHTML = "* Can Contain only Letters, Apostrophes and Space";
+		            setNAME_VAL(is_fname, 'false');
+		            // set the focus in the input field where the user entered characters other than letters
+		            // input_field.focus();
+		        } else { // the user entered characters which are letters ( in the input_field )
+		        	setNAME_VAL(is_fname, 'true');
+		            if (required == 'true') {
+		                message_span.innerHTML = "* Required Field";
+		            } else {
+		                message_span.innerHTML = "";
+		            }
+		        }
+		    } else {
+		        if (required == 'true') {
+		        	setNAME_VAL(is_fname, 'false');
+		            message_span.innerHTML = "* Required Field";
+		        } else {
+		        	setNAME_VAL(is_fname, 'true');
+		            message_span.innerHTML = "";
+		        }
+		    } 
+		}
+		
+		// checkForm: if the validation was successful return TRUE otherwise return FALSE
+		function checkForm(){
+		    if ((FNAME_VAL === 'true') && (LNAME_VAL === 'true') && (EMPID_VAL === 'true') && (DATE_VAL === 'true')) { 
+		        return true;
+		    } else {
+		        return false;
+		    }
+		}
+
+	</script>
 </head>
 
 <body>   

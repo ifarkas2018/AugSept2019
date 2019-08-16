@@ -25,7 +25,7 @@
 		    }
 		}
 		
-		// isNumber: shows a message ( in the msg_field ) if the user entered a value that is a non numeric value ( in the input field named input_field )
+		// isNum: shows a message ( in the msg_field ) if the user entered a value that is a non numeric value ( in the input field named input_field )
 		// formid: id of the form
 		// num_type - is the input in the field an Employee ID @@@@@@@@@@@@@@@@@@@@@@@ change this
 		function isNum(formid, input_field, num_type, msg_field) {

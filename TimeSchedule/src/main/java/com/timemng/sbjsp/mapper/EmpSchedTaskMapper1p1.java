@@ -12,13 +12,13 @@ import org.springframework.jdbc.core.RowMapper;
 public class EmpSchedTaskMapper1p1 implements RowMapper<EmpSchedTaskInfo1p1> {
 
 	// BASE_SQL is a SQL query to which later I added the where clause depending on the data the user entered on the List Schedule
-	public static String BASE_SQL // 
-	= "select e.emp_id, s.emp_id, ta.task_id, ta.task_name, ta.task_date, ta.start_time, ta.end_time from employee e, schedule s, task ta"  //
+	public static String BASE_SQL // @@@@@@@@@@@@ e.emp_id, s.emp_id, 
+	= "select ta.task_id, ta.task_name, ta.task_date, ta.start_time, ta.end_time from employee e, schedule s, task ta"  //
 	+ " where (e.emp_id = s.emp_id ) and (s.sched_id = ta.sched_id) ";
 		
 	// resetBASE_SQL sets the string BASE_SQL to its original value
-	public static void resetBASE_SQL() {
-		BASE_SQL = "select e.emp_id, s.emp_id, ta.task_id, ta.task_name, ta.task_date, ta.start_time, ta.end_time from employee e, schedule s, task ta"  //
+	public static void resetBASE_SQL() { // @@@@@@@@@@@@@@@@ e.emp_id, s.emp_id,
+		BASE_SQL = "select ta.task_id, ta.task_name, ta.task_date, ta.start_time, ta.end_time from employee e, schedule s, task ta"  //
 		+ " where (e.emp_id = s.emp_id ) and (s.sched_id = ta.sched_id) ";
 	}
 		

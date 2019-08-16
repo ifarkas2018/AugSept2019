@@ -54,7 +54,7 @@
 	              			<!-- w3-center centers the text -->
 		                	<h4 class="w3-center"><b>Update Task</b></h4>
 		                	<!-- after clicking on the button localhost:8080/show_update_results is called using method post -->
-		                	<form action="/show_update_results" method="post">
+		                	<form action="/show_update_results" name="update_sched" id="update_sched" method="post">
 		                <%	
 		                } else if (is_add_task.equals("true")){ // it is Add Task
 		                %>
@@ -88,17 +88,14 @@
 		                	<input class="w3-input w3-border" type="text" name="task_id" value="${task_info.taskId}" >
 		                  	<div class="w3-section">
 		                    	<label>Task Name</label>
-		                    	<!--  ??????????????????????????????  -->
-		                    	<!--  when removing REQUIRED go to MainController, show_schedule, and in method show_schedule remove required=true 
-		                    			for the employee_id --> <!-- required=true -->
-		                    	<input class="w3-input w3-border" type="text" name="task_name" value="${task_info.taskName}" > <!-- input field for entering the task name -->
+		                    	<input class="w3-input w3-border" type="text" name="task_name" id="task_name" maxlength="70" value="${task_info.taskName}" > <!-- input field for entering the task name -->
 		                  	</div>
 		                <%	
 		                } else { // it is Add Task or Delete Task
 		                %>
 		                  	<div class="w3-section">
 		                    	<label>Task Name</label>
-		                    	<input class="w3-input w3-border" type="text" name="task_name"> <!-- input field for entering the task name -->
+		                    	<input class="w3-input w3-border" type="text" name="task_name" id="task_name" maxlength="70"> <!-- input field for entering the task name -->
 		                  	</div>
 		                <%
 		                }
@@ -109,14 +106,15 @@
 	              		%>
 		                  	<div class="w3-section">
 		                    	<label>Date ( format dd/mm/yyyy ) </label>
-		                    	<input class="w3-input w3-border" type="text" name="task_date" value="${task_info.taskDate}" required=true> <!-- input field for entering the date of the task -->
+		                    	<input class="w3-input w3-border" type="text" name="task_date" id="task_date" maxlength="10" onchange='isDate("task_date", "date_message");' value="${task_info.taskDate}" required=true> <!-- input field for entering the date of the task -->
+		                  		<span id="date_message" class="red_text">* Required Field</span>
 		                  	</div>
 		                <%	
 		                } else { // it is Add or Delete Task @@@@@@@@@ if (is_add_task.equals("true")) 
 		                %>  
 		                	<div class="w3-section">
 	                    		<label>Date ( format dd/mm/yyyy ) </label>
-	                    		<input class="w3-input w3-border" type="text" name="task_date" required=true> <!-- input field for entering the date of the task -->
+	                    		<input class="w3-input w3-border" type="text" name="task_date" id="task_date" maxlength="10" required=true> <!-- input field for entering the date of the task -->
 	                  		</div>
 		                <%
 		                }
@@ -126,15 +124,16 @@
 	              		if (is_add_del_task.equals("false")) { // it is not Add or Delete Task but Update Task
 	              		%>	
 		                  	<div class="w3-section">
-		                    	<label>Start Time ( format hh:mm )</label>
-		                    	<input class="w3-input w3-border" type="text" name="start_time" value="${task_info.taskStartTime}" required=true> <!-- input field for entering the start time -->
+		                    	<label>Start Time ( format hh:mm AM/PM )</label>
+		                    	<input class="w3-input w3-border" type="text" name="start_time" id="start_time" onchange='validTime("start_time", true, "start_msg");' maxlength="8" value="${task_info.taskStartTime}" required=true> <!-- input field for entering the start time -->
+		                  		<span id="start_msg" class="red_text">* Required Field</span>
 		                  	</div>
 		                <%	
 		                } else { // it is Add Task or Delete Task if (is_add_task.equals("true")) @@@@@@@@@@@@@@@@@@@@@@@@
 		                %>
 		                	<div class="w3-section">
 		                    	<label>Start Time ( format hh:mm AM/PM )</label>
-		                    	<input class="w3-input w3-border" type="text" name="start_time" required=true> <!-- input field for entering the start time -->
+		                    	<input class="w3-input w3-border" type="text" name="start_time" id="start_time" maxlength="8" required=true> <!-- input field for entering the start time -->
 		                  	</div>
 		                <%
 		                }
@@ -148,20 +147,21 @@
 		                    	<!--  ??????????????????????????????  -->
 		                    	<!--  when removing REQUIRED go to MainController, show_schedule, and in method show_schedule remove required=true
 		                    		   for the last-name -->
-		                    	<input class="w3-input w3-border" type="text" name="end_time" value="${task_info.taskEndTime}" required=true> <!-- input field for entering the end time -->
+		                    	<input class="w3-input w3-border" type="text" name="end_time" id="end_time" maxlength="8" onchange='validTime("end_time", false, "end_msg");' value="${task_info.taskEndTime}" required=true> <!-- input field for entering the end time -->
+		                  		<span id="end_msg" class="red_text">* Required Field</span>
 		                  	</div>
 		                <%	
 		                } else if (is_add_task.equals("true")) { // it is Add Task
 		                %>  
 		                	<div class="w3-section">
 		                    	<label>End Time ( format hh:mm )</label>
-		                    	<input class="w3-input w3-border" type="text" name="end_time" required=true> <!-- input field for entering the end time -->
+		                    	<input class="w3-input w3-border" type="text" name="end_time" id="end_time" maxlength="8" required=true> <!-- input field for entering the end time -->
 		                  	</div>
 		                <%
 		                }
 		                %>	
 		                  	<!-- w3-camo-grey is a CSS rule in the colors.css -->
-		                  	<button class="w3-btn w3-camo-grey">Submit</button> 
+		                  	<button class="w3-btn w3-camo-grey" onclick="return checkForm();">Submit</button> 
 		                </form>
 	              	</div>
 	            </div>

@@ -177,17 +177,17 @@ public class EmpSchedTaskDAO1p1 extends JdbcDaoSupport {
     	String sql = EmpSchedTaskMapper1p1.BASE_SQL;
     	
     	// if the user entered an employee id in the Show Schedule form I am changing the SQL query to return the records where the employee id equals the entered value
-    	if (!(empId.equals(null))) {
+    	if (!empId.equals(null) && !empId.equals("")) {
     		sql += "and ( e.emp_id='" + empId + "') ";
     	}
     	
     	// if the user entered a first name in the Show Schedule form I am changing the SQL query to return the records where the first name equals the entered value
-    	if (!(fName.equals(null))) {
+    	if (!fName.equals(null) && !fName.equals("")) {
     		sql += "and ( e.first_name='" + fName + "') ";
     	}
     	
     	// if the user entered a first name in the Show Schedule form I am changing the SQL query to return the records where the first name equals the entered value
-    	if (!(lName.equals(null))) {
+    	if (!lName.equals(null) && !lName.equals("")) {
     		sql += "and ( e.last_name='" + lName + "') ";
     	}
     	
@@ -198,7 +198,7 @@ public class EmpSchedTaskDAO1p1 extends JdbcDaoSupport {
     	String sDBFormatDate = dateDB(noEmpSpaces);
     	
     	// if the user entered a date for the schedule in the Show Schedule form I am changing the SQL query to return the records where the date equals the entered value
-    	if (!(sDBFormatDate.equals(null))) {
+    	if (!sDBFormatDate.equals(null) && !sDBFormatDate.equals("")) {
     		sql += "and ( ta.task_date='" + sDBFormatDate + "') ";
     	}
     	

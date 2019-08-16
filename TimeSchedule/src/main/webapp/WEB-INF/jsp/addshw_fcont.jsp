@@ -50,7 +50,7 @@
 			            	} else if (is_add_emp.equals("true")) { // it is Add Employee
 			            %>
 			            		<!-- after clicking on the button add_login is called using method post -->
-				                <form action="/add_login" name="add_emp" id="add_emp" method="post" onsubmit="return checkForm();">
+				                <form action="/add_login" name="add_emp" id="add_emp" method="post">
 				        <%
 			            	}
 			            
@@ -69,11 +69,11 @@
 		                    	<%
 		                  			if (is_add_emp.equals("true")) { // it is Add Employee
 		                  		%>
-		                    			<input class="w3-input w3-border" type="text" name="first_name" id="first_name" maxlength="30" onfocusout="valLetters(document.add_emp.first_name, fname_message, 'true', 'true');" required=true> 
+		                    			<input class="w3-input w3-border" type="text" name="first_name" id="first_name" maxlength="30" onchange="valLetters(document.add_emp.first_name, fname_message, 'true', 'true');" required=true> 
 								<%
 		                  			} else if (is_show_emp.equals("true")) { // it is Show Employee
 		                  		%>
-		                  				<input class="w3-input w3-border" type="text" name="first_name" id="first_name" maxlength="30" onfocusout="valLetters(document.show_emp.first_name, fname_message, 'true', 'true');" required=true>
+		                  				<input class="w3-input w3-border" type="text" name="first_name" id="first_name" maxlength="30" onchange="valLetters(document.show_emp.first_name, fname_message, 'true', 'true');" required=true>
 		                  		<%  
 		                  			}	
 								%>
@@ -85,11 +85,11 @@
 		                    	<%
 		                  			if (is_add_emp.equals("true")) { // it is Add Employee
 		                  		%>
-		                    			<input class="w3-input w3-border" type="text" name="last_name" id="last_name" maxlength="30" onfocusout="valLetters(document.add_emp.last_name, lname_message, 'true', 'false');" required=true> 
+		                    			<input class="w3-input w3-border" type="text" name="last_name" id="last_name" maxlength="30" onchange="valLetters(document.add_emp.last_name, lname_message, 'true', 'false');" required=true> 
 		                  		<%
 		                  			} else if (is_show_emp.equals("true")) { // it is Show Employee
 		                  		%>
-		                  				<input class="w3-input w3-border" type="text" name="last_name" id="last_name" maxlength="30" onfocusout="valLetters(document.show_emp.last_name, lname_message, 'true', 'false');" required=true>
+		                  				<input class="w3-input w3-border" type="text" name="last_name" id="last_name" maxlength="30" onchange="valLetters(document.show_emp.last_name, lname_message, 'true', 'false');" required=true>
 		                  		<%  
 		                  			}	
 								%>
