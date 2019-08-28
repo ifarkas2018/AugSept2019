@@ -109,7 +109,7 @@
 										    <option value="Support">Support</option>
 										</select> 
 				                  	</div> 
-				                  	<button class="w3-btn w3-camo-grey">Next</button> 
+				                  	<button class="w3-btn w3-camo-grey" onclick="return checkForm();">Next</button> 
 				            <%
 		                  		} else if (is_show_emp.equals("true")) { // it is Show Employee
 				            %>
