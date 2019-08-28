@@ -69,7 +69,7 @@
     					
     					if ((is_add_task.equals("true")) || (is_del_task.equals("true"))) { // if Add or Delete Task
     					%>
-    						<form action="/add_d_form" method="post"> <!-- shows the URL : localhost:8080/add_d_form -->
+    						<form action="/add_d_form" name="add_d_form" id="add_d_form" method="post"> <!-- shows the URL : localhost:8080/add_d_form -->
     				
     					<% 
     					} else { // if Show Schedule or Update Schedule
@@ -87,12 +87,34 @@
 		                  	
 			                <div class="w3-section">
 			                    <label>First Name</label>  
-			                    <input class="w3-input w3-border" type="text" name="first_name" id="first_name" maxlength="30" onchange="valLetters(document.show_sched.first_name, fname_message, 'true', 'true');" required=true> <!-- input field for entering the first_name -->
+			                    <% 
+			                    	if ((is_add_task.equals("true")) || (is_del_task.equals("true"))) { // if Add or Delete Task
+			                    %>
+			                    		<input class="w3-input w3-border" type="text" name="first_name" id="first_name" maxlength="30" onchange="valLetters(document.add_d_form.first_name, fname_message, 'true', 'true');" required=true> <!-- input field for entering the first_name -->
+			                    <%
+			                    	} else {
+			                    %>
+			                    		<input class="w3-input w3-border" type="text" name="first_name" id="first_name" maxlength="30" onchange="valLetters(document.show_sched.first_name, fname_message, 'true', 'true');" required=true> <!-- input field for entering the first_name -->
+			               		<%
+			                    	}
+			               		%>
 			               		<span id="fname_message" class="red_text">* Required Field</span>
 			                </div>
 			                <div class="w3-section">
 			                    <label>Last Name</label>
-			                    <input class="w3-input w3-border" type="text" name="last_name" id="last_name" maxlength="30" onchange="valLetters(document.show_sched.last_name, lname_message, 'true', 'false');" required=true> <!-- input field for entering the last_name -->
+			                    <% 
+			                    	if ((is_add_task.equals("true")) || (is_del_task.equals("true"))) { // if Add or Delete Task
+			                    %>
+			                    		<input class="w3-input w3-border" type="text" name="last_name" id="last_name" maxlength="30" onchange="valLetters(document.add_d_form.last_name, lname_message, 'true', 'false');" required=true> 
+			                    <%
+			                    	} else {
+			                    %>
+			                    		<input class="w3-input w3-border" type="text" name="last_name" id="last_name" maxlength="30" onchange="valLetters(document.show_sched.last_name, lname_message, 'true', 'false');" required=true> 
+			               		<%
+			                    	}
+			               		%>
+			               		<!--  @@@@@@@@@@@ DELETE the next line -->
+			                    <!-- <input class="w3-input w3-border" type="text" name="last_name" id="last_name" maxlength="30" onchange="valLetters(document.show_sched.last_name, lname_message, 'true', 'false');" required=true> --> 
 			                	<span id="lname_message" class="red_text">* Required Field</span>
 			                </div> 
 		                <% } %>  

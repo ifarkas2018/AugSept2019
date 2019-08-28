@@ -51,11 +51,17 @@
 	
 				if ((isNaN(arr[0])) || (isNaN(arr[1])) || (isNaN(arr[2]))) { // if the day, month or year is not a number
 					DATE_VAL = 'false';
-					document.getElementById(msg_field).innerHTML = "* Can Contain Only Digits"; // show the message
+					document.getElementById(msg_field).innerHTML = "* Can Contain Only Digits And Slash /"; // show the message
+				} else if ( arr[0] === '00' || arr[1] === '00' || arr[2] === '0000') {
+					DATE_VAL = 'false';
+					document.getElementById(msg_field).innerHTML = "* The Day, Month Has To Be > 00 And The Year Has To Be > 0000";
+				} else if ( arr[0].length !=2 || arr[1].length !=2 || arr[2].length !=4 ){ // if the user didn't enter 2 digits for the day, month or 4 digits for the year 
+					DATE_VAL = 'false';
+					document.getElementById(msg_field).innerHTML = "* Please Enter The Date In The Required Format";
 				} else {
 					if (arr[0]>31 || arr[1]>12) {
 						DATE_VAL = 'false';
-						document.getElementById(msg_field).innerHTML = "* The Day Has To Be < 31 And The Month Has To Be <12";
+						document.getElementById(msg_field).innerHTML = "* The Day Has To Be < 31 And The Month Has To Be < 12";
 					} else {
 						DATE_VAL = 'true';
 						document.getElementById(msg_field).innerHTML = "* Required Field";
@@ -63,7 +69,7 @@
 				}
 			} else {
 				DATE_VAL = 'false';
-				document.getElementById(msg_field).innerHTML = "* Can Contain Only Digits"; // show the message
+				document.getElementById(msg_field).innerHTML = "* Can Contain Only Digits And Slash /"; // show the message
 			}
 		}
 		
@@ -81,6 +87,7 @@
 		// is shown again that the input field is required ( to be filled in )
 		function valLetters( input_field, message_span,required, is_fname) { 
 		    var regex = /^[a-zA-Z\x27\x20]+$/;
+		    //alert("valLetters");
 		    
 		    if (!input_field.value == '') {
 		        if ( !regex.test(input_field.value)) { // if the user entered some characters which are not letters ( in the input_field )
