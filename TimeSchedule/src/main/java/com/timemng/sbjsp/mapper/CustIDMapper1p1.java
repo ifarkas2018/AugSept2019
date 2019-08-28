@@ -8,7 +8,7 @@ import org.springframework.jdbc.core.RowMapper;
 // CustIDInfo - model class ( the class which contains the cust_id from the customer table )
 import com.timemng.sbjsp.model.CustIDInfo1p1;;
 
-// CustIDMapper - a mapper class (used for mapping corresponding to 1-1 between relationship between 1 column in the result of the query statement and 1 field in 
+// CustIDMapper - a mapper class (used for mapping corresponding to 1-1 relationship between 1 column in the result of the query statement and 1 field in 
 // the class CustIDMapper.java )
 public class CustIDMapper1p1 implements RowMapper<CustIDInfo1p1> {
 		
