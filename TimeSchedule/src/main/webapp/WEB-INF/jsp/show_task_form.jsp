@@ -114,7 +114,8 @@
 		                %>  
 		                	<div class="w3-section">
 	                    		<label>Date ( format dd/mm/yyyy ) </label>
-	                    		<input class="w3-input w3-border" type="text" name="task_date" id="task_date" maxlength="10" required=true> <!-- input field for entering the date of the task -->
+	                    		<input class="w3-input w3-border" type="text" name="task_date" id="task_date" maxlength="10" onchange='isDate("task_date", "date_message");' required=true> <!-- input field for entering the date of the task -->
+	                  			<span id="date_message" class="red_text">* Required Field</span>
 	                  		</div>
 		                <%
 		                }
@@ -133,7 +134,8 @@
 		                %>
 		                	<div class="w3-section">
 		                    	<label>Start Time ( format hh:mm AM/PM )</label>
-		                    	<input class="w3-input w3-border" type="text" name="start_time" id="start_time" maxlength="8" required=true> <!-- input field for entering the start time -->
+		                    	<input class="w3-input w3-border" type="text" name="start_time" id="start_time" onchange='validTime("start_time", true, "start_msg");' maxlength="8" required=true> <!-- input field for entering the start time -->
+		                  		<span id="start_msg" class="red_text">* Required Field</span>
 		                  	</div>
 		                <%
 		                }
@@ -154,8 +156,9 @@
 		                } else if (is_add_task.equals("true")) { // it is Add Task
 		                %>  
 		                	<div class="w3-section">
-		                    	<label>End Time ( format hh:mm )</label>
-		                    	<input class="w3-input w3-border" type="text" name="end_time" id="end_time" maxlength="8" required=true> <!-- input field for entering the end time -->
+		                    	<label>End Time ( format hh:mm AM/PM )</label>
+		                    	<input class="w3-input w3-border" type="text" name="end_time" id="end_time" maxlength="8" onchange='validTime("end_time", false, "end_msg");' required=true> <!-- input field for entering the end time -->
+		                  		<span id="end_msg" class="red_text">* Required Field</span>
 		                  	</div>
 		                <%
 		                }

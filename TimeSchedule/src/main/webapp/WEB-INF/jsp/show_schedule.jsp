@@ -49,7 +49,7 @@
 								<!-- !!!!!!!!!!!!!!!!!!!11 HIDE THE next line -->
 								Id:<input type="text" name="taskId" id="taskId"><br><br>
 								<br/>
-								Please click on the table fist to select the task!
+								<!-- Please click on the table fist to select the task! -->
 								<br/>
 								<!-- creating the table with the tasks -->
 								<table class="w3-table w3-bordered w3-centered" id="table">
