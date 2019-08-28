@@ -487,6 +487,11 @@ public class MainController1p1 {
     			// first_name, last_name are used for showing the message on the results.jsp if there is NO schedule for that employee
     			first_name = fName;
     			last_name = lName;
+    			// if fName, lName contains ' add one more next to it ( otherwise an error will occur when running the SQL query )  
+    	    	if (fName != null && !fName.equals(""))
+    	    		fName = TimeMngLibrary.addApostrophe(fName);
+    	    	if (lName != null && !lName.equals(""))
+    	    		lName = TimeMngLibrary.addApostrophe(lName);
     			// @@@@@@@@@@@@@@@ check here lstEmp is null 30/07/2019 after splitting DAO now I have lst and lstEmp
     			if (name_entered) // if the user is logged as an admin and he entered the first and last name then read the employee ID
     				empID = lstEmp.get(0).getEmployeeID(); // retrieving the employee ID
@@ -510,7 +515,6 @@ public class MainController1p1 {
 						model.addAttribute("message_shown", "The schedule for employee named "+ first_name + " " + last_name + " on " + enter_date + " doesn't exist!" );
 				else
 					model.addAttribute("message_shown", "The schedule for employee named "+ first_name + " " + last_name + " on " + enter_date + " doesn't exist!" );
-				
 				
 				// the message should be in red ( adding it to the model )
 				model.addAttribute("is_red", "true");
@@ -599,6 +603,7 @@ public class MainController1p1 {
     }
     */
     
+    /* I DON'T think this is USED 21/08/2019
     // if the requested URL is localhost:8080/task_list, method is GET do 
     @RequestMapping(value = { "task_list" }, method = RequestMethod.GET)
     public String task_list(Model model) {
@@ -607,6 +612,7 @@ public class MainController1p1 {
         model.addAttribute("message", message);
         return "task_list"; // return the task_list.jsp
     }
+    */
     
     // if the requested URL is localhost:8080/add_task, method is GET do 
     // if the user ( admin ) chooses Task -> Add
@@ -656,6 +662,11 @@ public class MainController1p1 {
     	model.addAttribute("already_login", "true"); // did the user log in before ( and is still logged in )
     	
     	name_entered = true; // did the user enter the name in the form 
+    	fName = TimeMngLibrary.addApostrophe(fName);
+    	lName = TimeMngLibrary.addApostrophe(lName);
+    	this.fName = fName;
+    	this.lName = lName;
+    	
     	// determine the empID
     	if (empID.equals("")) {
     		// add to the SQL query the WHERE clause - where ( firstName = first name of the employee ) and ( lastName = last name of the employee )	
@@ -715,33 +726,41 @@ public class MainController1p1 {
         @RequestParam(value="task_date", required=true ) String enter_tdate, @RequestParam(value="start_time", required=true ) String enter_stime, //
         @RequestParam(value="end_time", required=false ) String enter_etime, @RequestParam(value="delete_task", required=true ) String del_task ) {
     	
+    	String employeeID = "";
     	boolean add_succ = false; // success of the adding of the record to the database
     	boolean del_query = false; // success of the building the SQL query ( DELETE )
     	int numRows = -1; // number of affected rows ( Delete Task ) 
     	
-    	String schedID = ""; // ID of the schedule ( from the table schedule ) for the employee with the ID empID
+    	String schedID = ""; // ID of the schedule ( from the table schedule ) for the employee with the ID employeeID
+    	
     	List<ScheduleInfo1p1> lst = new ArrayList<>(); // list of objects ( scheduleID, employeeID )
+    	List<EmpIDInfo1p1> lstEmp = new ArrayList<>(); // list of objects ( employeeID )
+    	enter_tname = TimeMngLibrary.addApostrophe(enter_tname); // if there is an ' int the task name add another one ( because of the SQL query )
     	
     	try {
-    		if (empID.equals(""))
-    			empID = loginID; // assigning the value to the employee ID ( of the logged in user )  
-    		// add to the SQL query the WHERE clause - where ( ( emp_id = empID )
-    		schedDAO.addToQueryStr(empID);
-    		// list is a list of objects of type ScheduleInfo ( sched_id ) where (( emp_id = empID) 
+    		empIDDAO.addToQueryStrID(fName, lName);
+			lstEmp = empIDDAO.getEmployeeID(fName, lName);
+			if (lst != null) 
+				employeeID = lstEmp.get(0).getEmployeeID(); // get the ID of the employee with name fName lName
+    		//if (empID.equals(""))
+    			//empID = loginID; // assigning the value to the employee ID ( of the logged in user )  
+    		// add to the SQL query the WHERE clause - where ( ( emp_id = employeeID )
+    		schedDAO.addToQueryStr(employeeID);
+    		// list is a list of objects of type ScheduleInfo ( sched_id ) where (( emp_id = employeeID) 
     		lst = schedDAO.getSchedID(); // getting the sched_id of the employee with employee ID
     		if (lst != null && !lst.isEmpty()) { // if the sched_id for the given emp_id is found
     			schedID = lst.get(0).getScheduleID(); // retrieving the schedule ID
     		} else { 
     			// ADDING the employee's employee ID to the schedule table
 	    		// creating an INSERT SQL query for adding a new employee's employee ID to the schedule table
-	    		schedDAO.addToQueryInsert(empID);
+	    		schedDAO.addToQueryInsert(employeeID);
 	    		// adding the employee ID to the schedule table
-	    		numRows = schedDAO.addEmpID(empID);
+	    		numRows = schedDAO.addEmpID(employeeID);
 	    		if (numRows > 0) { // emp_id was successfully added to the schedule table
 		    		// RETRIEVE the created sched_id
-		    		// add to the SQL query the WHERE clause - where ( ( emp_id = empID )
-		    		schedDAO.addToQueryStr(empID);
-		    		// list is a list of objects of type ScheduleInfo ( sched_id ) where (( emp_id = empID) 
+		    		// add to the SQL query the WHERE clause - where ( ( emp_id = employeeID )
+		    		schedDAO.addToQueryStr(employeeID);
+		    		// list is a list of objects of type ScheduleInfo ( sched_id ) where (( emp_id = employeeID) 
 		    		lst = schedDAO.getSchedID(); // getting the sched_id of the employee with employee ID
 		    		if (lst != null && !lst.isEmpty())  // if the sched_id for the given emp_id is found
 		    			schedID = lst.get(0).getScheduleID(); // retrieving the schedule ID
