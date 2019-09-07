@@ -66,11 +66,12 @@ public class MainController1p1 {
 	 private CustIDDAO1p1 custIDDAO1p1;
 	 @Autowired
 	 private MessageDAO1p1 messageDAO;
+	 // @@@@@@@@@@@@@ add this to forms and pass them through forms
 	 private String loginID; // the logged in user's ID
 	 private String empID; // the employee's ID
 	 private String fName; // the employee's first name
 	 private String lName; // the employee's last name
-	 private String department; // department
+	 private String department; // department 
 	 
 	 
 	    
@@ -160,6 +161,8 @@ public class MainController1p1 {
     		model.addAttribute("logged_in","true"); // setting the default value for whether the user logged in
     		model.addAttribute("already_login", "false"); // did the user log in before ( and is still logged in )
     		// addBacksl replaces every occurence of \ with \\\\ and replaces every occurence of ' with \\'
+    		
+    		String usernm_noapostr = user_name; // user name with no ' 
     		user_name = TimeMngLibrary.addApostrophe(user_name);
     		user_passw = TimeMngLibrary.addApostrophe(user_passw);
     		
@@ -181,7 +184,7 @@ public class MainController1p1 {
     					model.addAttribute("page_title", "Log In");
 						// setting the attribute logged_in to false - the user didn't log in
 						model.addAttribute("logged_in", "false");
-						model.addAttribute("message_shown", "The user with the user name " + user_name + " and the entered password doesn't exist!");
+						model.addAttribute("message_shown", "The user with the user name " + usernm_noapostr + " and the entered password doesn't exist!");
 						// the message should be in red ( adding it to the model )
 						model.addAttribute("is_red", "true");
 						return "result"; // show the result.jsp     			
@@ -191,7 +194,7 @@ public class MainController1p1 {
 					model.addAttribute("page_title", "Log In");
 					// setting the attribute logged_in to false - the user didn't log in
 					model.addAttribute("logged_in", "false");
-					model.addAttribute("message_shown", "The user with the user name " + user_name + " and the entered password doesn't exist!");
+					model.addAttribute("message_shown", "The user with the user name " + usernm_noapostr + " and the entered password doesn't exist!");
 					// the message should be in red ( adding it to the model )
 					model.addAttribute("is_red", "true");
 					return "result"; // show the result.jsp  
@@ -209,7 +212,9 @@ public class MainController1p1 {
 							model.addAttribute("is_admin", "false"); // the user is not logged in as admin
 							LoginInfo1p1 log_info = list.get(0); // retrieving the object of type LoginInfo1p1 which has the employee ID
 							loginID = log_info.getEmployeeID(); // retrieving the employee ID
-							empID = ""; // reset the ID of the logged in employee 
+							empID = loginID; // reset the ID of the logged in employee 
+							fName = "";
+							lName = "";
 							return "index1"; // show the index1.jsp
 						//} 
 						//return "index1";
@@ -219,7 +224,7 @@ public class MainController1p1 {
 						// setting the attribute logged_in to false - the user didn't log in
 						model.addAttribute("logged_in", "false");
 						model.addAttribute("is_admin", "false"); // the user is not logged in as admin
-						model.addAttribute("message_shown", "The user with the user name " + user_name + " and the entered password doesn't exist!");
+						model.addAttribute("message_shown", "The user with the user name " + usernm_noapostr + " and the entered password doesn't exist!");
 						// the message should be in red ( adding it to the model )
 						model.addAttribute("is_red", "true");
 						return "result"; // show the result.jsp 
@@ -272,11 +277,11 @@ public class MainController1p1 {
     @RequestMapping(value = "addshow_emp", method = RequestMethod.POST)
     // first_name, last_name is an input element in addshw_fcont.jsp
     // the user entered the first name, last name of the new employee to be added to the database
-	public String addshow_emp( Model model, @RequestParam(value="emp_id", required=false ) String emp_id, //
-		@RequestParam( value="first_name", required=false ) String f_Name, @RequestParam( value="last_name", required=false ) String l_Name, // 
-		@RequestParam(value="user_name", required=false ) String userName,  @RequestParam( value="user_passw", required=false ) String password, //
-		@RequestParam( value="show_add", required=false ) String show_add ) {
+	public String addshow_emp( Model model, @RequestParam( value="first_name", required=false ) String f_Name, //
+		@RequestParam( value="last_name", required=false ) String l_Name, @RequestParam(value="user_name", required=false ) String userName, //
+		@RequestParam( value="user_passw", required=false ) String password, @RequestParam( value="show_add", required=false ) String show_add ) {
 	
+    	String emp_id = ""; // employee ID
     	int numRows = -1; // how many rows were affected by the SQL statement
     	List<EmpIDNameInfo1p1> lst = new ArrayList<>(); // list of elements of type EmpIDNameInfo1p1
     	List<EmpIDInfo1p1> lstEmp = new ArrayList<>(); // list of elements of type EmpEmailInfo1p1
@@ -325,7 +330,7 @@ public class MainController1p1 {
     		    		// creating an INSERT SQL query for adding a new employee's user name and password to the login table
     		    		empLoginDAO.addToQueryInsert(empID, userName, password);
     		    		// adding a new employee's user name and password to the login table
-    		    		numRows = empLoginDAO.addUser(); // @@@@@@@@@@@@@ empID, userName, password changed for reorginizing
+    		    		numRows = empLoginDAO.addUser(); // @@@@@@@@@@@@@ empID, userName, password changed for reorganising
     		    		
     		    		if (numRows > 0) { // if the user was added successfully to the login table
 	    		    		// ADDING the NEW EMPLOYEE'S employee ID to the schedule table
@@ -443,9 +448,9 @@ public class MainController1p1 {
     
     // if the requested URL is localhost:8080/sched_table, method is POST
     @RequestMapping(value = "sched_table", method = RequestMethod.POST)
-	public String sched_table(Model model, @RequestParam(value="employee_id", required=false ) String employee_id, // 
-    		@RequestParam(value="first_name", required=false ) String first_name, // 
+	public String sched_table(Model model, @RequestParam(value="first_name", required=false ) String first_name, // 
     		@RequestParam(value="last_name", required=false) String last_name, @RequestParam(value="date", required=true) String enter_date) {
+    	
        	List<PersonInfo1p1> lst = new ArrayList<>(); // list of objects ( first name, last name )
        	List<EmpIDInfo1p1> lstEmp = new ArrayList<>(); // list of objects ( emp ID )
     	boolean name_entered = false; // did the user enter the employee ID, first name, last name ( if the admin is logged in )
@@ -454,7 +459,8 @@ public class MainController1p1 {
     	model.addAttribute("logged_in", "false"); // now is the user not logging in 
     	model.addAttribute("logged_out", "false"); // now is the user not logging out 
     	model.addAttribute("already_login", "true"); // did the user log in before ( and is still logged in )
-    	empID = employee_id; // setting the variable empID to the value entered on the form
+    	// @@@@ before Emp ID REMOVED empID = employee_id; // setting the variable empID to the value entered on the form
+    	empID = "";
     	fName = first_name; // setting the variable fName to the value entered on the form
     	lName = last_name; // setting the variable lName to the value entered on the form
     	
@@ -464,7 +470,7 @@ public class MainController1p1 {
     	if (lName != null && !lName.equals(""))
     		lName = TimeMngLibrary.addApostrophe(lName);
     
-    	if ((empID==null) && (fName==null) && (lName==null)) { // if it is a regular user ( who is doing update and not show of the schedule, retrieve the name 
+    	if ((empID==null || empID.equals("")) && (fName==null || fName.equals("")) && (lName==null || fName.equals(""))) { // if it is a regular user ( who is doing update and not show of the schedule, retrieve the name 
 	    	// add to the SQL query the WHERE clause - where emp_id = loginID of the user logged in 
 	    	personDAO.addToQueryStrName(loginID);
 			// list is a list of objects of type EmpNameInfo ( employee ID, first name, last name ) where employee ID is the ID of logged in user
@@ -481,7 +487,7 @@ public class MainController1p1 {
     	}
     	
     	if ((lst != null && !lst.isEmpty()) || (name_entered)) { // the employee with the first and last name is found 
-    		if (lst != null && !lst.isEmpty()) { // retrieve the name
+    		if (lst != null && !lst.isEmpty()) { // retrieve the name  
     			fName = lst.get(0).getFirstName(); // retrieving the first name of the logged in user
     			lName = lst.get(0).getLastName(); // retrieving the last name of the logged in user
     			// first_name, last_name are used for showing the message on the results.jsp if there is NO schedule for that employee
@@ -524,9 +530,9 @@ public class MainController1p1 {
 				// add the schedule of the employee as the attribute to the model 
 				model.addAttribute("empSchedTaskInfos", list);
 				// add the first name as the attribute to the model
-				model.addAttribute("enter_f_name", fName ); 
+				model.addAttribute("enter_f_name", first_name ); 
 				// add the last name to the model
-				model.addAttribute("enter_l_name", lName );
+				model.addAttribute("enter_l_name", last_name );
 				// add the date ( of the schedule ) to the model
 				model.addAttribute("enter_date", enter_date ); 
 				
@@ -647,13 +653,14 @@ public class MainController1p1 {
     // if the requested URL is localhost:8080/add_d_form, method is POST do
     // used in show_sched_fcont.jsp
      @RequestMapping(value = { "add_d_form"}, method = RequestMethod.POST )
-     public String add_d_form(Model model, @RequestParam(value="employee_id", required=false ) String employee_id, // 
-    	@RequestParam(value="first_name", required=false ) String fName, // 
+     public String add_d_form(Model model, @RequestParam(value="first_name", required=false ) String fName, // 
     	@RequestParam(value="last_name", required=false) String lName) {
     	
     	List<EmpIDInfo1p1> lst = new ArrayList<>(); // list of objects ( employee ID )
-    	boolean name_entered = false; // did the user enter the employee ID, first name, last name ( if the admin is logged in )
-    	empID = employee_id; // setting the variable empID to the value entered on the form
+    	// boolean name_entered = false; // did the user enter the employee ID, first name, last name ( if the admin is logged in )
+    	String empID = ""; 
+    	String first_name = ""; // first name without '
+    	String last_name = ""; // last name without '
     	
     	model.addAttribute("is_add_del_task","true"); // it is Add Task or Delete Task
     	model.addAttribute("read_add_d", "true"); // whether the is_add_del_task attribute is set ( used by the JSP )
@@ -661,26 +668,35 @@ public class MainController1p1 {
     	model.addAttribute("logged_out", "false"); // now is the user not logging out 
     	model.addAttribute("already_login", "true"); // did the user log in before ( and is still logged in )
     	
-    	name_entered = true; // did the user enter the name in the form 
+    	// name_entered = true; // did the user enter the name in the form
+    	first_name = fName;
+    	last_name = lName;
     	fName = TimeMngLibrary.addApostrophe(fName);
     	lName = TimeMngLibrary.addApostrophe(lName);
     	this.fName = fName;
     	this.lName = lName;
     	
     	// determine the empID
-    	if (empID.equals("")) {
+    	// remove the EmpID input field if (empID.equals("")) {
     		// add to the SQL query the WHERE clause - where ( firstName = first name of the employee ) and ( lastName = last name of the employee )	
     		empIDDAO.addToQueryStrID(fName, lName);
     		// list is a list of objects of type EmpNameInfo ( employee ID, first name, last name ) where (first_name = fName) and (last_name = lName) 
     		lst = empIDDAO.getEmployeeID(fName, lName); // getting the name of the employee with employee ID	
-    	}
+    	//}
     	
-    	if ((lst != null && !lst.isEmpty()) || (name_entered)) { // the employee with the first and last name is found 
-    		if (lst != null && !lst.isEmpty()) { // retrieve the name
-    			if (name_entered) // if the user is logged as an admin and he entered the first and last name then read the employee ID
+    	if ((lst != null && !lst.isEmpty())) { // the employee with the first and last name is found 
+    		//if (lst != null && !lst.isEmpty()) { // retrieve the name
+    			//if (name_entered) // if the user is logged as an admin and he entered the first and last name then read the employee ID
     				empID = lst.get(0).getEmployeeID(); // retrieving the employee ID
-    		}
-    	}	
+    		//}
+    	} else {
+			model.addAttribute("message_shown", "The employee doesn't exist in the database. Please first add the employee " + first_name + " " + last_name + " to the database!");
+    		model.addAttribute("is_red", "true"); // adding to the model : the text needs to be shown in red
+    		model.addAttribute("logged_in", "false"); // the user is now not logging in 
+        	model.addAttribute("logged_out", "false"); // the user is now not logging out 
+        	model.addAttribute("already_login", "true"); // did the user log in before ( and is still logged in )
+        	return "result";
+    	}
     	return "show_task_info";
     }
      
@@ -689,7 +705,7 @@ public class MainController1p1 {
     @RequestMapping(value = { "add_task_get"}, method = RequestMethod.GET )
     public String add_task_get(Model model) {
     	
-    	List<EmpEmailInfo1p1> lst = new ArrayList<>(); // list of objects ( employee ID, first name, last name )
+    	// List<EmpEmailInfo1p1> lst = new ArrayList<>(); // list of objects ( employee ID, first name, last name )
     	
     	model.addAttribute("is_add_del_task", "false"); // attribute is_add_del_task is not set
     	model.addAttribute("is_add_task","true"); // it is Add Task
@@ -738,19 +754,33 @@ public class MainController1p1 {
     	enter_tname = TimeMngLibrary.addApostrophe(enter_tname); // if there is an ' int the task name add another one ( because of the SQL query )
     	
     	try {
-    		empIDDAO.addToQueryStrID(fName, lName);
-			lstEmp = empIDDAO.getEmployeeID(fName, lName);
-			if (lst != null) 
-				employeeID = lstEmp.get(0).getEmployeeID(); // get the ID of the employee with name fName lName
+    		if ( (fName == null && lName == null) || (fName.equals("") && lName.equals(""))) { // regular user ( there is no input field for the first and last name )
+    			employeeID = empID; // from the login
+    		} else { // administrator 
+	    		empIDDAO.addToQueryStrID(fName, lName);
+				lstEmp = empIDDAO.getEmployeeID(fName, lName);
+				if (lstEmp != null && lstEmp.size() != 0 ) 
+					employeeID = lstEmp.get(0).getEmployeeID(); // get the ID of the employee with name fName lName
+    		}
+    		
     		//if (empID.equals(""))
     			//empID = loginID; // assigning the value to the employee ID ( of the logged in user )  
-    		// add to the SQL query the WHERE clause - where ( ( emp_id = employeeID )
-    		schedDAO.addToQueryStr(employeeID);
-    		// list is a list of objects of type ScheduleInfo ( sched_id ) where (( emp_id = employeeID) 
-    		lst = schedDAO.getSchedID(); // getting the sched_id of the employee with employee ID
-    		if (lst != null && !lst.isEmpty()) { // if the sched_id for the given emp_id is found
+    		if (employeeID != null && !employeeID.equals("")) {
+	    		// add to the SQL query the WHERE clause - where ( ( emp_id = employeeID )
+	    		schedDAO.addToQueryStr(employeeID);
+	    		// list is a list of objects of type ScheduleInfo ( sched_id ) where (( emp_id = employeeID) 
+	    		lst = schedDAO.getSchedID(); // getting the sched_id of the employee with employee ID
+    		}
+    		if (lst != null && !lst.isEmpty()) { // if the sched_id for the given employee ID is found
     			schedID = lst.get(0).getScheduleID(); // retrieving the schedule ID
-    		} else { 
+    		} else {
+    			model.addAttribute("message_shown", "The employee doesn't exist in the database. Please first add the employee to the database!");
+	    		model.addAttribute("is_red", "true"); // adding to the model : the text needs to be shown in red
+	    		model.addAttribute("logged_in", "false"); // the user is now not logging in 
+	        	model.addAttribute("logged_out", "false"); // the user is now not logging out 
+	        	model.addAttribute("already_login", "true"); // did the user log in before ( and is still logged in )
+	        	return "result";
+    			/*
     			// ADDING the employee's employee ID to the schedule table
 	    		// creating an INSERT SQL query for adding a new employee's employee ID to the schedule table
 	    		schedDAO.addToQueryInsert(employeeID);
@@ -772,8 +802,11 @@ public class MainController1p1 {
 		        	model.addAttribute("already_login", "true"); // did the user log in before ( and is still logged in )
 		        	return "result";
 	    		}
+	    		*/
     		}
     		if (del_task.equals("false")) { // it isn't Delete but Add Task
+    			enter_stime = TimeMngLibrary.correctTime(enter_stime); // change the enter_stime to be in the format hh:mm AM/PM
+    			enter_etime = TimeMngLibrary.correctTime(enter_etime); // change the enter_etime to be in the format hh:mm AM/PM
 	    		// adds to the SQL query the schedule ID, task name, task date, start time, end time depending on the data the user entered in the Add Task form
 	    		empSchedTaskDAO.addToQueryStr2(schedID, enter_tname, enter_tdate, enter_stime, enter_etime);
 	    		// adding the task to the DB

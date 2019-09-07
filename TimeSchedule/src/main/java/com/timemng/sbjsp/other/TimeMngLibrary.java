@@ -63,4 +63,28 @@ public static String addApostrophe(String str){
         return newStr;
     }
 
+// correctTime: if the strTime in a format h:mm PM adds 0 at the beginning AND if the strTime is in format hh:mmAM adds the space between hh:mm and AM
+// AND the am ( or pm ) is substituted with AM ( or PM ).
+public static String correctTime(String strTime){
+	String newTime = strTime;
+	
+	// if the newTime in a format h:mm AM ( PM ) adds 0 at the beginning
+	if (newTime.charAt(1) == ':') 
+		newTime = "0" + newTime;
+	
+	// if the newTime is in format hh:mmAM adds the space between hh:mm and AM
+	if (newTime.charAt(5) != ' ') 
+		newTime = newTime.substring(0,5) + ' ' + newTime.substring(5); 
+	
+	// if the newTime contains pm substitute it with PM
+	String endStr = newTime.substring(6);
+	if (endStr.equals("pm"))
+		newTime = newTime.substring(0,6) + "PM";
+	
+	// if the newTime contains am substitute it with AM
+	if (endStr.equals("am"))
+		newTime = newTime.substring(0,6) + "AM";
+	return newTime;
+}
+
 }

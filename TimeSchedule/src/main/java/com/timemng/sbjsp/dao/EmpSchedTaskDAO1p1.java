@@ -22,7 +22,68 @@ public class EmpSchedTaskDAO1p1 extends JdbcDaoSupport {
     public EmpSchedTaskDAO1p1(DataSource dataSource) {
         this.setDataSource(dataSource);
     }
- 
+	
+	// containsAM: does the list contain an element whose start time has an AM as a substring
+	private boolean containsAM( List<EmpSchedTaskInfo1p1> list) {
+		int i = 0; // counter
+		boolean found = false;
+		EmpSchedTaskInfo1p1 el;
+		
+		while ( i < list.size() && !found ) {
+			el = list.get(i); // the element of the list
+			String startTime = el.getTaskStartTime();
+			if (startTime.indexOf("AM", 0) > 0) // if the startTime does contain "AM"
+				found = true;
+			i++;
+		}
+		
+		return found;
+	}
+	
+	/*
+	// elContainsPM: if taskStartTime of the element of the list ( passed in as the argument ) contains PM returns true ( otherwise returns false )
+	private boolean elContainsPM(EmpSchedTaskInfo1p1 el) {
+		
+		String startTime = el.getTaskStartTime(); // get the start time of the element ( in the list )
+		if (startTime.indexOf( "PM", 0 ) > 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	*/
+	
+	
+	// elContains: if taskStartTime of the element of the list ( passed in as the argument ) contains amPM ("AM" or "PM") returns true ( otherwise returns false )
+	private boolean elContains(EmpSchedTaskInfo1p1 el, String amPM) {
+			
+		String startTime = el.getTaskStartTime(); // get the start time of the element ( in the list )
+		if (startTime.indexOf( amPM, 0 ) > 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+		
+	// checkEndAM: check it whether after this element ( at position pos ) there is an element whose taskStartTime contains AM
+	private boolean checkEndAM(int pos, List<EmpSchedTaskInfo1p1> lst) {
+		
+		EmpSchedTaskInfo1p1 el; // element of the list
+		boolean existsElAM = false; // is there an element in the list after position pos whose taskStartTime contains AM
+		int i = pos + 1;
+		
+		while ( i < lst.size() && !existsElAM ) { 
+			el = lst.get(i);
+			if (elContains(el, "AM")) {
+				existsElAM = true;
+			}
+			i++;
+			// int mm =1;
+		}
+		
+		return existsElAM;
+	}
+	
     // getSchedules - retrieving the schedule for the employee on the requested date as a List of the elements of the type EmpSchedTaskInfo
     public List<EmpSchedTaskInfo1p1> getSchedules() {
     	List<EmpSchedTaskInfo1p1> list=null; // initialising the list
@@ -36,6 +97,38 @@ public class EmpSchedTaskDAO1p1 extends JdbcDaoSupport {
         	EmpSchedTaskMapper1p1 mapper = new EmpSchedTaskMapper1p1();
         	// running the query and retrieving the list of the tasks for the employee on the requested date
         	list = this.getJdbcTemplate().query(sql, params, mapper);
+        	
+        	int j = 0; // counter used for going through the list
+        	boolean elPMmoved = false; // was an element of the list moved whose taskStartTime contains PM
+        	boolean endPMOnly = true; // after this element whose taskStartTime contains PM is there an element whose taskStartTime contains AM
+        	
+        	// if in the list there is an element whose start time contains an AM then the elements of the list which have start time that contain PM have to 
+        	// be moved to the end of the list to get the sorted list
+        	// BECAUSE the SQL sorted the numbers in the list ( start time ) regardless whether it is AM or PM
+        	if ( containsAM(list) ) {
+        		for ( int i = 0; i < list.size(); i++ ) {
+        			if ( elContains(list.get(j), "PM") ) { // if the start time contains PM at the end
+        				if (!elPMmoved) { // if this is the FIRST element whose taskStartTime contains PM
+        					// check it whether after this element there is an element whose taskStartTime contains AM ( otherwise this element doesn't need 
+        					// to be moved - the rest of the list is sorted )
+        					endPMOnly = !checkEndAM(j, list);
+        				}
+        				// if an element was moved before ( whose taskStartTime contains PM ) or after the element whose taskStartTime contains PM there is
+        				// an element whose taskStartTime contains AM
+        				// then move this element to the end of the list
+        				if (elPMmoved || !endPMOnly) { 
+        					list.add(list.remove(j)); // remove that element and add it at the end
+        					elPMmoved = true;
+        					j--; // I removed an element ( and put it to the END of the list ) so I have to reduce the counter to test for the next element 
+        					 	// whether it contains PM
+        					//list.remove(i);
+        				}
+        			}
+        			j++;
+        		}
+        		//list.remove(0);
+        		//list.remove(1);
+        	}
         } catch (Exception e) {
         	
         }
@@ -209,7 +302,7 @@ public class EmpSchedTaskDAO1p1 extends JdbcDaoSupport {
     	EmpSchedTaskMapper1p1.updateSQL(sql);
     }
     
-    
+    /*
     public void addToQueryStr1(String userName, String userPassw ) {
 
     	boolean returnVal; // the value returned by the method
@@ -232,6 +325,7 @@ public class EmpSchedTaskDAO1p1 extends JdbcDaoSupport {
         // updating the query string to the new query string formed above
      	LoginMapper1p1.updateSQL(sql);     	
     }
+    */
     
      // adds to the SQL query the schedule ID, task name, task date, start time, end time depending on the data the user entered in the Add Task form
  	 // if the user didn't enter the task name, task date, start time or end time( in the form ) then this method returns false
@@ -282,6 +376,7 @@ public class EmpSchedTaskDAO1p1 extends JdbcDaoSupport {
  		  EmpSchedTaskMapper1p1.resetDEL_TASK_SQL();
  		 
  		  taskName = removeEmpSpaces(taskName, false); // substitutes 2 empty spaces with one
+ 		  boolean taskNameExists = false;
  		  String noEmpSpaces = removeEmpSpaces(taskDate, true); // removes the empty spaces from the date 
  		  startTime = removeEmpSpaces(startTime, false); // substitutes 2 empty spaces with one
  		
@@ -312,35 +407,38 @@ public class EmpSchedTaskDAO1p1 extends JdbcDaoSupport {
  		  } 
  		
  		  String sql = EmpSchedTaskMapper1p1.DEL_TASK_SQL;
- 		  if (!(taskName.equals(null))) {
- 			  sql += "'" + taskName + "'"; // add the taskName to the where clause
+ 		  if (!taskName.equals(null) && !taskName.equals("")) {
+ 			  sql += "task_name=" + "'" + taskName + "'"; // add the taskName to the where clause
  			  // returnVal = true;
- 			  sql += ")"; 
- 			
- 			  if (!(taskDate.equals(null))) {
- 
- 				  // dateDB coverts the date from the format dd/mm/yyyy to the format yyyy-mm-dd
- 				  // sDBFormatDate is the date in the format yyyy-mm-dd
- 				  String sDBFormatDate = dateDB(noEmpSpaces);
- 				  sql += " AND (task_date=";
+ 			  //sql += ")"; 
+ 			  taskNameExists = true;
+ 		  }
+ 		  
+ 		  if (!taskDate.equals(null)) {
+ 			  // dateDB coverts the date from the format dd/mm/yyyy to the format yyyy-mm-dd
+ 			  // sDBFormatDate is the date in the format yyyy-mm-dd
+ 			  String sDBFormatDate = dateDB(noEmpSpaces);
+ 			  if (!taskNameExists) 
+ 				  sql += "task_date=";
+ 			  else
+ 				  sql += " AND task_date=";
  				  sql += "'" + sDBFormatDate + "'"; // add the date of  the task to the where clause
- 				  sql += ")";
- 	 	    	 	    	
- 			  }
+ 				  // sql += ")";
+ 	 	  }    
  	 		 
- 			  if (!(startTime.equals(null))) {
- 				  sql += " AND (start_time=";
- 				  sql += "'" + startTime + "'"; // add the date of  the task to the where clause
- 				  sql += ")";
- 			  }
+ 		  if (!startTime.equals(null)) {
+ 			  sql += " AND start_time=";
+ 			  sql += "'" + startTime + "'"; // add the date of  the task to the where clause
+ 			  //sql += ")";
+ 		  }
  			
- 			  if (!(schedID.equals(null))) {
- 				  sql += " AND (sched_id=";
- 				  sql += "'" + schedID + "'"; // add the schedule ID to the where clause
- 				  sql += ")";
- 				  returnVal = true; 
- 			  }
- 		  }   
+ 		  if (!schedID.equals(null)) {
+ 			  sql += " AND sched_id=";
+ 			  sql += "'" + schedID + "'"; // add the schedule ID to the where clause
+ 			  //sql += ")";
+ 			  returnVal = true; 
+ 		  }
+ 		    
  	     
  		  // if the building of the SQL query was so far successful
  		  if (returnVal) {

@@ -47,11 +47,11 @@ public class EmpSchedTaskMapper1p1 implements RowMapper<EmpSchedTaskInfo1p1> {
 	
 	// DEL_TASK_SQL is a SQL query to which later I will add the value of the task name 
 	public static String DEL_TASK_SQL //
-	= "DELETE FROM task WHERE (task_name=";
+	= "DELETE FROM task WHERE ";
 	
 	// resetDEL_TASK_SQL sets the string DEL_TASK_SQL to its original value
 	public static void resetDEL_TASK_SQL() {
-		DEL_TASK_SQL = "DELETE FROM task WHERE (task_name=";
+		DEL_TASK_SQL = "DELETE FROM task WHERE ";
 	}
 	
 	// updating the query string to the new query string formed in the class EmpSchedTaskDAO, method addToQueryStrDel

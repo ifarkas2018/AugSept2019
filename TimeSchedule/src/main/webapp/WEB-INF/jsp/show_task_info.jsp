@@ -14,28 +14,29 @@
 		START_T_VAL = 'true'; // has the entered start time the format hh:mm AM/PM
 		END_T_VAL  = 'true'; // has the entered end time the format hh:mm AM/PM
 		
-		// isDate: shows a message ( in the msg_field ) if the user entered a date ( in the input field named input_field )
-		function isDate(input_field, msg_field) {
+		//dateFormat: shows a message ( in the msg_field ) if the user entered a date ( in the input field named input_field )
+		function dateFormat(input_field, msg_field) {
 			var date;
 			
 			// the date in the input field
- 			date = document.getElementById(input_field).value;
+			date = document.getElementById(input_field).value;
 			
 			if (date.indexOf("//") < 0) {
 				var arr = date.split("/"); // split the date using the character /
-				if ((isNaN(arr[0])) || (isNaN(arr[1])) || (isNaN(arr[2]))) { // if the day, month or year is not a number
+
+				if ( arr[0].length !=2 || arr[1].length !=2 || arr[2].length !=4 ){ // if the user didn't enter 2 digits for the day, month or 4 digits for the year 
+					DATE_VAL = 'false';
+					document.getElementById(msg_field).innerHTML = "* Please Enter The Date In The Required Format";
+				} else if ((isNaN(arr[0])) || (isNaN(arr[1])) || (isNaN(arr[2]))) { // if the day, month or year is not a number
 					DATE_VAL = 'false';
 					document.getElementById(msg_field).innerHTML = "* Can Contain Only Digits And Slash /"; // show the message
 				} else if ( arr[0] === '00' || arr[1] === '00' || arr[2] === '0000') {
 					DATE_VAL = 'false';
 					document.getElementById(msg_field).innerHTML = "* The Day, Month Has To Be > 00 And The Year Has To Be > 0000";
-				} else if ( arr[0].length !=2 || arr[1].length !=2 || arr[2].length !=4 ){
-					DATE_VAL = 'false';
-					document.getElementById(msg_field).innerHTML = "* Please Enter The Date In The Required Format";
 				} else {
 					if (arr[0]>31 || arr[1]>12) {
 						DATE_VAL = 'false';
-						document.getElementById(msg_field).innerHTML = "* The Day Has To Be < 31 And The Month Has To Be < 12";
+						document.getElementById(msg_field).innerHTML = "* The Day Has To Be Less Or Equal 31 And The Month Has To Be Less Or Equal 12";
 					} else {
 						DATE_VAL = 'true';
 						document.getElementById(msg_field).innerHTML = "* Required Field";

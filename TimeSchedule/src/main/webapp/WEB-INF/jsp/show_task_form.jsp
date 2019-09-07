@@ -106,7 +106,7 @@
 	              		%>
 		                  	<div class="w3-section">
 		                    	<label>Date ( format dd/mm/yyyy ) </label>
-		                    	<input class="w3-input w3-border" type="text" name="task_date" id="task_date" maxlength="10" onchange='isDate("task_date", "date_message");' value="${task_info.taskDate}" required=true> <!-- input field for entering the date of the task -->
+		                    	<input class="w3-input w3-border" type="text" name="task_date" id="task_date" maxlength="10" onchange='dateFormat("task_date", "date_message");' value="${task_info.taskDate}" required=true> <!-- input field for entering the date of the task -->
 		                  		<span id="date_message" class="red_text">* Required Field</span>
 		                  	</div>
 		                <%	
@@ -114,7 +114,7 @@
 		                %>  
 		                	<div class="w3-section">
 	                    		<label>Date ( format dd/mm/yyyy ) </label>
-	                    		<input class="w3-input w3-border" type="text" name="task_date" id="task_date" maxlength="10" onchange='isDate("task_date", "date_message");' required=true> <!-- input field for entering the date of the task -->
+	                    		<input class="w3-input w3-border" type="text" name="task_date" id="task_date" maxlength="10" onchange='dateFormat("task_date", "date_message");' required=true> <!-- input field for entering the date of the task -->
 	                  			<span id="date_message" class="red_text">* Required Field</span>
 	                  		</div>
 		                <%

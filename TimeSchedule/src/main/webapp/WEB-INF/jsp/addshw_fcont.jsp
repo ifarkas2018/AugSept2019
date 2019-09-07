@@ -53,16 +53,18 @@
 				                <form action="/add_login" name="add_emp" id="add_emp" method="post">
 				        <%
 			            	}
-			            
-		                	if (is_show_emp.equals("true")) { // it is Show Employee
+			            	
+		                	// if (is_show_emp.equals("true")) { // it is Show Employee @@@@@@@@@@@@@@@@@@@@@ 
 		                %>
+		                	<!--  @@@@@@@@@@@@@@@@@@@@@@@@'
 		                	<div class="w3-section">
 		                    	<label>Employee ID</label>
 		                    	<input class="w3-input w3-border" type="text" name="emp_id" id="emp_id" onchange='isNum("show_emp", "emp_id", "is_empid", "empid_message");'> 
 		                  		<span id="empid_message" class="red_text"></span>
-		                  	</div> 
+		                  	</div>
+		                  	--> 
 		                <%
-		                	}
+		                	//}
 		                %>
 		                  	<div class="w3-section">
 		                    	<label>First Name</label>

@@ -55,12 +55,12 @@
 		                %>
 		                  	<div class="w3-section">
 		                    	<label>User Name</label>
-		                    	<input class="w3-input w3-border" type="text" name="user_name" id="user_name" required=true> <!-- input field for entering the user name -->
+		                    	<input class="w3-input w3-border" type="text" name="user_name" id="user_name" maxlength="20" required=true> <!-- input field for entering the user name -->
 		                  		<span class="red_text">* Required Field</span>	
 		                  	</div> 
 		                  	<div class="w3-section">
 		                    	<label>Password</label>
-		                    	<input class="w3-input w3-border" type="password" name="user_passw" id="user_passw" onchange="equalPasswords();" required=true> <!-- input field for entering the password -->
+		                    	<input class="w3-input w3-border" type="password" name="user_passw" id="user_passw" maxlength="20" onchange="equalPasswords();" required=true> <!-- input field for entering the password -->
 		                  		<span class="red_text">* Required Field</span>
 		                  	</div>
 		                  	<%  if (logging_in.equals("true")) { // the user is logging in
@@ -71,7 +71,7 @@
 		                  	%>
 		                  			<div class="w3-section">
 		                    			<label>Re-enter Password</label>
-		                    			<input class="w3-input w3-border" type="password" name="user_passw2" id="user_passw2" onchange="equalPasswords();"  required=true> <!-- input field for re-entering the password -->
+		                    			<input class="w3-input w3-border" type="password" name="user_passw2" id="user_passw2" maxlength="20" onchange="equalPasswords();"  required=true> <!-- input field for re-entering the password -->
 		                  				<span id="message2" name="message2" class="red_text">* Required Field</span>
 		                  			</div>
 				                  	<input class="w3-input w3-border" type="text" name="show_add" value="add"> 

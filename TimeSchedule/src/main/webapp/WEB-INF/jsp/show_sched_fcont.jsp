@@ -79,12 +79,13 @@
     					}
 		                // if the user is logged in as admin, or as an ordinary user who is not doing the update ( but show of the schedule )
 		                if ((is_adm) || (is_update).equals("false")){ %> 
+		                	<!-- @@@@@@@@@@@@@ REMOVE the Emp Id
 			            	<div class="w3-section">
 				                <label>Employee ID</label>
-				                <input class="w3-input w3-border" type="text" name="employee_id" id="employee_id" maxlength="6" onchange='isNum("show_sched", "employee_id", "is_empid", "empid_message");'> <!-- input field for entering the employee_id -->
+				                <input class="w3-input w3-border" type="text" name="employee_id" id="employee_id" maxlength="6" onchange='isNum("show_sched", "employee_id", "is_empid", "empid_message");'> <!- input field for entering the employee_id ->
 			                	<span id="empid_message" class="red_text"></span>
 			                </div>
-		                  	
+		                  	 -->
 			                <div class="w3-section">
 			                    <label>First Name</label>  
 			                    <% 
@@ -124,7 +125,7 @@
 		                %>
 			                    <div class="w3-section">
 			                    	<label>Date ( format dd/mm/yyyy ) </label>
-			                    	<input class="w3-input w3-border" type="text" name="date" id="date" maxlength="10" onchange='isDate("date", "date_message");' required=true>
+			                    	<input class="w3-input w3-border" type="text" name="date" id="date" maxlength="10" onchange='dateFormat("date", "date_message");' required=true>
 			                    	<span id="date_message" class="red_text">* Required Field</span>
 			                  	</div>
 		                <%
